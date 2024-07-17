@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="courosel.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" type="text/css">
+    <script src="chatgpt.js"></script>
+</head>
+<body>
+    <div class="header">
+        <!-- Header content goes here -->
+        <div class="header-main container">
+            <h1 class="logo col-md-2 col-sm-2">
+                <a href="/"><img id="logo" src="b2.png" alt="Logo" height="120px;" width="120px;" style="margin-top:40px;"></a>
+            </h1>
+            <div class="col-md-7" style="text-align:center">
+                <p style="font-family: 'Montserrat', sans-serif; color:#192A56">Bapuji Educational Association (Regd.)</p>
+                <h2 style="font-family: 'Bree Serif', serif; font-size: 31px; color:#192A56">Bapuji Institute of Engineering and Technology</h2>
+                <p class="location" style="font-family: 'Oswald', sans-serif; color:#192A56">
+                    <i><a href="#" style="color:#192A56">Post Box No. :325, Davanagere -577 004, Karnataka, India.<br>
+                    An Autonomous Institute Affiliated to Visvesvaraya Technological University, Belagavi, Karnataka.</a><br>
+                    Approved by AlCTE, New Delhi | Accredited by NAAC with 'A' grade and NBA (UG Programmes)<br>
+                    Recognized by UGC,New Delhi under 2(F) and 12(B)</i>
+                </p>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="form-container container">
+        <form id="myForm">
+            <div class="form-group">
+                <label for="course-name">Name of Course:</label>
+                <select id="course-name" name="course-name" required>
+                    <option value="staff1">Data Science and Visualizzation</option>
+                    <option value="staff2">FullStack with DJANGO</option>
+                    <option value="staff3">Cmputer Network's</option>
+                    <option value="staff4">Design And Analysis of Algorithms(DAA)</option>
+                    <option value="staff5">Computer Graphics</option>
+                    <option value="staff6">Operating System</option>
+                    <option value="staff7">Microcontroller Embeded System</option>
+                    <option value="staff8">Software Engneering</option>
+                    <option value="staff9">Python</option>
+                    <option value="staff10">Java</option>
+                    <option value="staff10">Data Structures and Applications</option>
+                    <option value="staff10">Alalog and Digital Electronics</option>
+                    <option value="staff10">Computer Organization and Architecture</option>
+                    <option value="staff10">DataBase Management System</option>
+                    <option value="staff10">Autometa theory and Compiler Design</option>
+                    <option value="staff10">Artificial Intelligence and Machine Learning</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="course-code">Course Code:</label>
+                <input type="text" id="course-code" name="course-code" required>
+            </div>
+            <div class="form-group">
+                <label for="staff-name">Staff Name:</label>
+                <select id="staff-name" name="staff-name" required>
+                    <option value="staff1">Dr. Nirmala C R</option>
+                    <option value="staff2">Dr. Pradeep N</option>
+                    <option value="staff3">Dr. Gururaj T</option>
+                    <option value="staff4">Dr. Arun kumar G Hiremath</option>
+                    <option value="staff5">Dr. Abdul Razak M S</option>
+                    <option value="staff6">Dr. Santosh K C</option>
+                    <option value="staff7">Dr. Naseer R</option>
+                    <option value="staff8">Dr. Naresh Patel K M</option>
+                    <option value="staff9">Dr. Gangadharappa S</option>
+                    <option value="staff10">Mr. Raghu B R</option>
+                    <option value="staff10">Ms. Anu C S</option>
+                    <option value="staff10">Mr. Waseem Khan</option>
+                    <option value="staff10">Mr. Vishwanath V K</option>
+                    <option value="staff10">Mrs. Madhu N Hiremath</option>
+                    <option value="staff10">Ms. Rachana G Sunkad</option>
+                    <option value="staff10">Mr. Arjun H</option>
+                    <option value="staff10">Mrs. Drusti Shastri</option>
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester" required>
+                    <option value="1" selected>0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="section">Section:</label>
+                <select id="section" name="section" required >
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="academic-year">Academic Year:</label>
+                <input type="year" id="academic-year" name="academic-year" required>
+            </div>
+            <div class="form-group">
+                <label for="batch">Batch </label>
+                <input type="text" id="batch" name="batch" placeholder="2020-2024" required>
+            </div>
+            <div class="form-group">
+                <!-- Submit button -->
+                <button type="submit" class="btn"id="submitBtn">Submit</button>
+                <!-- Reset button -->
+                <button type="reset" class="btn" style="margin-left: 10px;" id="resetBtn">Reset</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        // Function to store form data in localStorage
+        function storeFormData() {
+            const formData = {
+                courseName: document.getElementById('course-name').value,
+                courseCode: document.getElementById('course-code').value,
+                staffName: document.getElementById('staff-name').value,
+                semester: document.getElementById('semester').value,
+                section: document.getElementById('section').value,
+                academicYear: document.getElementById('academic-year').value,
+                batch: document.getElementById('batch').value,
+            };
+    
+            // Store in localStorage
+            localStorage.setItem('formData', JSON.stringify(formData));
+        }
+    
+        // Function to load form data from localStorage
+        function loadFormData() {
+            const formData = JSON.parse(localStorage.getItem('formData'));
+    
+            if (formData) {
+                document.getElementById('course-name').value = formData.courseName || '';
+                document.getElementById('course-code').value = formData.courseCode || '';
+                document.getElementById('staff-name').value = formData.staffName || '';
+                document.getElementById('semester').value = formData.semester || '';
+                document.getElementById('section').value = formData.section || '';
+                document.getElementById('academic-year').value = formData.academicYear || '';
+                document.getElementById('batch').value = formData.batch || '';
+            }
+        }
+    
+        // Event listener for form submission
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+            storeFormData(); // Store form data
+            alert('Your data has been submitted and saved.');
+            // Redirect to another webpage
+            window.location.href = 'n3.html'; // Replace with your desired URL
+        });
+    
+        // Event listener for form reset
+        document.getElementById('resetBtn').addEventListener('click', function(event) {
+            // Ask for confirmation
+            var confirmReset = confirm("Do you want to erase all data?");
+            if (confirmReset) {
+                localStorage.removeItem('formData'); // Clear localStorage data
+            } else {
+                event.preventDefault(); // Prevent the form from resetting
+            }
+        });
+    
+        // Load form data on page load
+        window.onload = function() {
+            loadFormData();
+        };
+    </script>
+<footer>
+        <div class="footer-content">
+            &copy; 2024 BAPUJI INSTITUTE OF ENGINEERING AND TECHNOLOGY
+        </div>
+</footer>
+</body>
+</html>

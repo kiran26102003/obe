@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO-PO Mapping and Marks Entry Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"], input[type="text"] {
+            width: 15%;
+            padding: 5px;
+            margin-left: 20px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+        input[type="text"]:hover, input[type="number"]:hover {
+            background-color: rgb(220, 255, 252);
+        }
+        #details {
+            text-align: center;
+            font-weight: bold;
+            color: darkred;
+            font-size: 32px;
+            margin-bottom: 4%;
+        }
+        hr {
+            margin-bottom: 3%;
+        }
+        #label1 {
+            font-weight: bold;
+            font-size: 24px;
+        }
+        #button_for_co_po {
+            width: 200px;
+            padding: 5px;
+            font-weight: bold;
+        }
+        #button_for_co_po:hover {
+            font-weight: bold;
+            background-color: black;
+            color: white;
+            transition: 0.3s background-color ease;
+            border-radius: 20px;
+        }
+        #button1 {
+            width: 150px;
+            padding: 7px;
+            font-weight: 18px;
+            border-radius: 20px;
+        }
+        .upload-section1 {
+            place-items: left;
+            justify-content: left;
+        }
+        #fileUpload {
+            padding: 5px;
+            margin-top: 20px;
+            justify-content: left;
+            margin-left: 5px;
+            border: transparent;
+            background-color: white;
+        }
+        .home-button {
+            margin-left: 10px;
+            text-decoration: none;
+            padding: 8px 16px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="details">CO-PO Mapping Tool</h2>
+    <hr>
+
+    <div>
+        <label for="subjectName" id="label1">Subject Name:</label>
+        <input type="text" id="subjectName" placeholder="Subject Name">
+        <br><br>
+        <label for="subjectCode" id="label1">Subject Code:</label>
+        <input type="text" id="subjectCode" placeholder="Subject Code">
+        <br><br>
+        <label for="semSec" id="label1">Semester & Section:</label>
+        <input type="text" id="semSec" placeholder="Semester & Section">
+        <br><br>
+        <label for="branchName" id="label1">Branch Name:</label>
+        <input type="text" id="branchName" placeholder="Branch Name">
+        <br><br>
+        <label for="numOfStudents" id="label1">Number of Students:</label>
+        <input type="number" id="numOfStudents" min="1">
+        <br><br>
+        <label for="maxMarks" id="label1">Maximum Marks Allotted:</label>
+        <input type="number" id="maxMarks" min="1">
+        <br><br>
+        <label for="classStrength" id="label1">Total Class Strength:</label>
+        <input type="number" id="classStrength" min="1">
+        <br><br>
+        <label for="studentsAttempted" id="label1">Number of Students Attempted:</label>
+        <input type="number" id="studentsAttempted" min="1">
+        <br><br>
+        <label for="numOfCOs" id="label1">Enter number of Course Outcomes (COs):</label>
+        <input type="number" id="numOfCOs" min="1" value="1">
+        <br><br>
+        <label for="numOfPSOs" id="label1">Enter number of Program Specific Outcomes (PSOs):</label>
+        <input type="number" id="numOfPSOs" min="1" value="1">
+        <br><br>
+        <button onclick="createMappingTable()" id="button_for_co_po">Create Mapping Table</button>
+    </div>
+    <br><br>
+    <div id="mappingTableContainer">
+        <!-- Mapping table will be dynamically added here -->
+    </div>
+
+    <div class="button-container">
+        <button onclick="saveMapping()" id="button1">Save Mapping</button>
+        <button onclick="clearMapping()" id="button1">Clear Mapping</button>
+        <button id="mappingButton" style="display: none;" onclick="redirectToMapping()" id="button1">Mapping</button>
+        <div class="upload-section">
+            <input type="file" id="fileUpload" accept=".docx, .jpg, .jpeg, .png" onchange="validateFileUpload()">
+            <label for="fileUpload">Upload Question Paper(Docx/Img max 1MB)</label>
+            <span class="filename"></span>
+            <div id="fileSizeError" class="error-message"></div>
+        </div>
+    </div>
+
+    <div>
+        <a href="#marks-entry" style="display: inline-block; margin-top: 20px;">Marks Entry</a>
+    </div>
+
+    <h2 id="marks-entry" style="margin-top: 40px;">MARKS ENTRY</h2>
+
+    <label for="numStudents">Enter Number of Students:</label>
+    <input type="number" id="numStudentsMarks" min="1" placeholder="Number of Students">
+    <button onclick="generateRows()">Submit</button>
+
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>USN</th>
+                <th colspan="3">Question 1</th>
+                <th colspan="3">Question 2</th>
+                <th colspan="3">Question 3</th>
+                <th colspan="3">Question 4</th>
+                <th colspan="3">Question 5</th>
+                <th colspan="3">Question 6</th>
+                <th colspan="3">Question 7</th>
+                <th colspan="3">Question 8</th>
+                <th colspan="3">Question 9</th>
+                <th colspan="3">Question 10</th>
+                <th>Target Marks</th>
+                <th>Attained Marks</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="studentRows">
+            <!-- Student rows will be generated here -->
+        </tbody>
+    </table>
+
+    <div class="button-container">
+        <button onclick="saveData()">Save Data</button>
+        <button onclick="printData()">Print Data</button>
+        <button onclick="clearForm()">Clear Form</button>
+        <button onclick="calculateLevelOfAttainment()">Calculate Level of Attainment</button>
+        <a href="#" class="home-button">Back to Home</a>
+    </div>
+
+    <h3 id="levelOfAttainment"></h3>
+
+    <script>
+        function createMappingTable() {
+            const numOfCOs = parseInt(document.getElementById('numOfCOs').value);
+            const numOfPSOs = parseInt(document.getElementById('numOfPSOs').value);
+
+            let tableHTML = '<table><thead><tr><th></th>';
+
+            for (let i = 1; i <= numOfCOs; i++) {
+                tableHTML += `<th>CO${i}</th>`;
+            }
+            for (let i = 1; i <= numOfPSOs; i++) {
+                tableHTML += `<th>PSO${i}</th>`;
+            }
+
+            tableHTML += '</tr></thead><tbody>';
+
+            for (let i = 1; i <= 10; i++) {
+                tableHTML += `<tr><td>Q${i}</td>`;
+                for (let j = 1; j <= numOfCOs; j++) {
+                    tableHTML += `<td><input type="number" min="1" max="10" placeholder="CO${j}" id="q${i}co${j}"></td>`;
+                }
+                for (let j = 1; j <= numOfPSOs; j++) {
+                    tableHTML += `<td><input type="number" min="1" max="10" placeholder="PSO${j}" id="q${i}pso${j}"></td>`;
+                }
+                tableHTML += '</tr>';
+            }
+
+            tableHTML += '</tbody></table>';
+
+            document.getElementById('mappingTableContainer').innerHTML = tableHTML;
+        }
+
+        function saveMapping() {
+            const subjectName = document.getElementById('subjectName').value;
+            const subjectCode = document.getElementById('subjectCode').value;
+            const semSec = document.getElementById('semSec').value;
+            const branchName = document.getElementById('branchName').value;
+            const numOfStudents = document.getElementById('numOfStudents').value;
+            const maxMarks = document.getElementById('maxMarks').value;
+            const classStrength = document.getElementById('classStrength').value;
+            const studentsAttempted = document.getElementById('studentsAttempted').value;
+
+            const mappingData = {
+                subjectName,
+                subjectCode,
+                semSec,
+                branchName,
+                numOfStudents,
+                maxMarks,
+                classStrength,
+                studentsAttempted
+            };
+
+            const numOfCOs = parseInt(document.getElementById('numOfCOs').value);
+            const numOfPSOs = parseInt(document.getElementById('numOfPSOs').value);
+            const mappingValues = {};
+
+            for (let i = 1; i <= 10; i++) {
+                for (let j = 1; j <= numOfCOs; j++) {
+                    const value = document.getElementById(`q${i}co${j}`).value;
+                    mappingValues[`q${i}co${j}`] = value;
+                }
+                for (let j = 1; j <= numOfPSOs; j++) {
+                    const value = document.getElementById(`q${i}pso${j}`).value;
+                    mappingValues[`q${i}pso${j}`] = value;
+                }
+            }
+
+            localStorage.setItem('mappingData', JSON.stringify(mappingData));
+            localStorage.setItem('mappingValues', JSON.stringify(mappingValues));
+
+            document.getElementById('mappingButton').style.display = 'inline-block';
+            alert('Mapping saved successfully!');
+        }
+
+        function clearMapping() {
+            localStorage.removeItem('mappingData');
+            localStorage.removeItem('mappingValues');
+            document.getElementById('mappingTableContainer').innerHTML = '';
+            document.getElementById('mappingButton').style.display = 'none';
+            alert('Mapping cleared!');
+        }
+
+        function validateFileUpload() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+            const maxSize = 1 * 1024 * 1024; // 1MB
+
+            if (file.size > maxSize) {
+                document.getElementById('fileSizeError').innerText = 'File size exceeds 1MB';
+                fileInput.value = ''; // Clear the file input
+            } else {
+                document.getElementById('fileSizeError').innerText = '';
+            }
+        }
+
+        function generateRows() {
+            const numStudents = document.getElementById('numStudentsMarks').value;
+            const studentRowsContainer = document.getElementById('studentRows');
+
+            studentRowsContainer.innerHTML = ''; // Clear existing rows
+
+            for (let i = 0; i < numStudents; i++) {
+                const row = document.createElement('tr');
+
+                // USN Column
+                const usnCell = document.createElement('td');
+                const usnInput = document.createElement('input');
+                usnInput.type = 'text';
+                usnInput.placeholder = 'USN';
+                usnCell.appendChild(usnInput);
+                row.appendChild(usnCell);
+
+                // Question Columns (10 questions, 3 parts each)
+                for (let q = 1; q <= 10; q++) {
+                    for (let part of ['a', 'b', 'c']) {
+                        const cell = document.createElement('td');
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.placeholder = `Q${q}${part}`;
+                        input.oninput = () => calculateAttainedMarks(input);
+                        cell.appendChild(input);
+                        row.appendChild(cell);
+                    }
+                }
+
+                // Target Marks Column
+                const targetCell = document.createElement('td');
+                const targetInput = document.createElement('input');
+                targetInput.type = 'number';
+                targetInput.placeholder = 'Target Marks';
+                targetCell.appendChild(targetInput);
+                row.appendChild(targetCell);
+
+                // Attained Marks Column
+                const attainedCell = document.createElement('td');
+                const attainedInput = document.createElement('input');
+                attainedInput.type = 'number';
+                attainedInput.placeholder = 'Attained Marks';
+                attainedCell.appendChild(attainedInput);
+                row.appendChild(attainedCell);
+
+                studentRowsContainer.appendChild(row);
+            }
+        }
+
+        function calculateAttainedMarks(input) {
+            const row = input.closest('tr');
+            const inputs = row.querySelectorAll('input[type="number"]:not([placeholder="Target Marks"])');
+            let attainedMarks = 0;
+
+            inputs.forEach(input => {
+                const value = parseFloat(input.value);
+                if (!isNaN(value)) {
+                    attainedMarks += value;
+                }
+            });
+
+            const attainedInput = row.querySelector('input[placeholder="Attained Marks"]');
+            attainedInput.value = attainedMarks;
+        }
+
+        function calculateLevelOfAttainment() {
+            const rows = document.querySelectorAll('#studentRows tr');
+            let totalAttainedMarks = 0;
+            let totalTargetMarks = 0;
+
+            rows.forEach(row => {
+                const attainedMarks = parseFloat(row.querySelector('input[placeholder="Attained Marks"]').value);
+                const targetMarks = parseFloat(row.querySelector('input[placeholder="Target Marks"]').value);
+
+                if (!isNaN(attainedMarks)) {
+                    totalAttainedMarks += attainedMarks;
+                }
+                if (!isNaN(targetMarks)) {
+                    totalTargetMarks += targetMarks;
+                }
+            });
+
+            const levelOfAttainment = (totalAttainedMarks / totalTargetMarks) * 100;
+            document.getElementById('levelOfAttainment').innerText = `Level of Attainment: ${levelOfAttainment.toFixed(2)}%`;
+        }
+
+        function saveData() {
+            const rows = document.querySelectorAll('#studentRows tr');
+            const studentData = [];
+
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input[type="number"], input[type="text"]');
+                const student = {};
+
+                inputs.forEach(input => {
+                    student[input.placeholder] = input.value;
+                });
+
+                studentData.push(student);
+            });
+
+            localStorage.setItem('studentData', JSON.stringify(studentData));
+            alert('Data saved successfully!');
+        }
+
+        function printData() {
+            window.print();
+        }
+
+        function clearForm() {
+            document.getElementById('studentRows').innerHTML = '';
+            document.getElementById('numStudentsMarks').value = '';
+            document.getElementById('levelOfAttainment').innerText = '';
+            localStorage.removeItem('studentData');
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('studentData');
+
+            if (savedData) {
+                const studentData = JSON.parse(savedData);
+                const numStudents = studentData.length;
+                document.getElementById('numStudentsMarks').value = numStudents;
+                generateRows();
+
+                const rows = document.querySelectorAll('#studentRows tr');
+
+                studentData.forEach((student, index) => {
+                    const inputs = rows[index].querySelectorAll('input[type="number"], input[type="text"]');
+
+                    inputs.forEach(input => {
+                        input.value = student[input.placeholder];
+                    });
+
+                    calculateAttainedMarks(rows[index].querySelector('input[type="number"]'));
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSavedData);
+    </script>
+</body>
+</html>

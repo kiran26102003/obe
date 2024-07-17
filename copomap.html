@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO-PO Mapping Tool</title>
+    <style>
+        label{
+    display: inline-block;
+    
+    clear: left;
+    width: 250px;
+    text-align: left; /*Change to right here if you want it close to the inputs*/
+}
+input {
+  display: inline-block;
+  
+}
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .form-group label {
+            margin-right: 10px;
+            width: 200px; /* Set a fixed width for labels */
+            text-align: right; /* Right-align text */
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="text"]:hover, input[type="number"]:hover {
+            background-color: rgb(220, 255, 252);
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button-container button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #details {
+            font-weight: bolder;
+            color: rgb(1, 1, 128);
+            font-size: 32px;
+            margin-bottom: 4%;
+        }
+        hr {
+            margin-bottom: 3%;
+        }
+        #button_for_co_po {
+            width: 200px;
+            padding: 5px;
+            font-weight: bold;
+        }
+        #button_for_co_po:hover {
+            background-color: black;
+            color: white;
+            transition: 0.3s;
+            border-radius: 20px;
+        }
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #fileUpload {
+            padding: 5px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="details">CO-PO Mapping Tool</h2>
+    <hr>
+
+    <div>
+        <label for="subjectName" id="label1">Subject Name:</label>
+        <input type="text" id="subjectName" placeholder="Subject Name">
+        <br><br>
+        <label for="subjectCode" id="label1">Subject Code:</label>
+        <input type="text" id="subjectCode" placeholder="Subject Code">
+        <br><br>
+        <label for="semSec" id="label1">Semester & Section:</label>
+        <input type="text" id="semSec" placeholder="Semester & Section">
+        <br><br>
+        <label for="branchName" id="label1">Branch Name:</label>
+        <input type="text" id="branchName" placeholder="Branch Name">
+        <br><br>
+        <label for="numOfStudents" id="label1">Number of Students:</label>
+        <input type="number" id="numOfStudents" min="1">
+        <br><br>
+        <label for="maxMarks" id="label1">Maximum Marks Allotted:</label>
+        <input type="number" id="maxMarks" min="1">
+        <br><br>
+        <label for="classStrength" id="label1">Total Class Strength:</label>
+        <input type="number" id="classStrength" min="1">
+        <br><br>
+        <label for="studentsAttempted" id="label1">Number of Students Attempted:</label>
+        <input type="number" id="studentsAttempted" min="1">
+        <br><br>
+        <label for="numOfCOs" id="label1">Enter number of Course Outcomes (COs):</label>
+        <input type="number" id="numOfCOs" min="1" value="1">
+        <br><br>
+        <label for="numOfPSOs" id="label1">Enter number of Program Specific Outcomes (PSOs):</label>
+        <input type="number" id="numOfPSOs" min="1" value="1">
+        <br><br>
+        <button onclick="createMappingTable()" id="button_for_co_po">Create Mapping Table</button>
+    </div>
+    <br><br>
+    <div id="mappingTableContainer">
+        <!-- Mapping table will be dynamically added here -->
+    </div>
+
+    <div class="button-container">
+        <button onclick="saveMapping()" id="button1">Save Mapping</button>
+        <button onclick="clearMapping()" id="button1">Clear Mapping</button>
+        <button id="mappingButton" style="display: none;" onclick="redirectToMapping()" id="button1">Mapping</button>
+        <div class="upload-section">
+            <input type="file" id="fileUpload" accept=".docx, .jpg, .jpeg, .png" onchange="validateFileUpload()">
+            <label for="fileUpload">Upload Question Paper(Docx/Img max 1MB)</label>
+            <span class="filename"></span>
+            <div id="fileSizeError" class="error-message"></div>
+        </div>
+    </div>
+
+    <div>
+        <a href="usn.html" style="display: inline-block; margin-top: 20px;">Marks Entry</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            loadMapping();
+        });
+
+        function createMappingTable() {
+            const numOfCOs = parseInt(document.getElementById('numOfCOs').value);
+            const numOfPSOs = parseInt(document.getElementById('numOfPSOs').value);
+
+            if (numOfCOs < 1 || numOfPSOs < 1) {
+                alert('Please enter valid numbers for COs and PSOs (minimum value is 1).');
+                return;
+            }
+
+            const mappingTableContainer = document.getElementById('mappingTableContainer');
+            mappingTableContainer.innerHTML = ''; // Clear previous table if any
+
+            const mappingTable = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            const emptyHeaderCell = document.createElement('th');
+            headerRow.appendChild(emptyHeaderCell); // Empty cell for alignment
+
+            // Create headers for PSOs
+            for (let j = 1; j <= numOfPSOs; j++) {
+                const psoHeaderCell = document.createElement('th');
+                psoHeaderCell.textContent = `PSO ${j}`;
+                headerRow.appendChild(psoHeaderCell);
+            }
+            const avgHeaderCell = document.createElement('th');
+            avgHeaderCell.textContent = 'Avg';
+            headerRow.appendChild(avgHeaderCell); // Add header for Avg
+            mappingTable.appendChild(headerRow);
+
+            // Create rows for COs
+            for (let i = 1; i <= numOfCOs; i++) {
+                const row = document.createElement('tr');
+                const coHeaderCell = document.createElement('th');
+                coHeaderCell.textContent = `CO ${i}`;
+                row.appendChild(coHeaderCell);
+
+                // Create input cells for PSOs
+                for (let j = 1; j <= numOfPSOs; j++) {
+                    const cell = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.placeholder = `Enter PSO ${j} for CO ${i}`;
+                    input.oninput = calculateAvgs; // Update to only calculate averages
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                mappingTable.appendChild(row);
+            }
+
+            // Add avg row
+            const avgRow = document.createElement('tr');
+            const avgHeader = document.createElement('th');
+            avgHeader.textContent = 'Avg';
+            avgRow.appendChild(avgHeader);
+
+            // Create avg cells
+            for (let j = 1; j <= numOfPSOs; j++) {
+                const avgCell = document.createElement('td');
+                avgCell.className = 'avg-cell'; // Add a class for identifying avg cells
+                avgRow.appendChild(avgCell);
+            }
+
+            mappingTable.appendChild(avgRow);
+            mappingTableContainer.appendChild(mappingTable);
+        }
+
+        // Function to calculate the averages for each PSO column
+        function calculateAvgs() {
+            const mappingTable = document.querySelector('#mappingTableContainer table');
+            const avgCells = mappingTable.querySelectorAll('.avg-cell');
+
+            // Reset sums and totals
+            const sums = Array.from({ length: avgCells.length }, () => 0);
+            const totalCOs = mappingTable.rows.length - 2; // Exclude header and avg row
+
+            // Iterate through rows to calculate sums
+            for (let i = 1; i < mappingTable.rows.length - 1; i++) { // Exclude header and avg row
+                for (let j = 1; j < mappingTable.rows[i].cells.length; j++) { // Include all PSO cells
+                    const input = mappingTable.rows[i].cells[j].querySelector('input');
+                    const value = parseFloat(input.value) || 0; // Convert to number
+                    sums[j - 1] += value; // Add to corresponding sum
+                }
+            }
+
+            // Update avg cells
+            sums.forEach((sum, index) => {
+                const avg = (sum * 3) / totalCOs; // Calculate average
+                avgCells[index].textContent = avg.toFixed(2); // Set avg value
+            });
+        }
+
+        function saveMapping() {
+            const subjectName = document.getElementById('subjectName').value.trim();
+            const subjectCode = document.getElementById('subjectCode').value.trim();
+            const semSec = document.getElementById('semSec').value.trim();
+            const branchName = document.getElementById('branchName').value.trim();
+            const numOfStudents = document.getElementById('numOfStudents').value.trim();
+            const maxMarks = document.getElementById('maxMarks').value.trim();
+            const classStrength = document.getElementById('classStrength').value.trim();
+            const studentsAttempted = document.getElementById('studentsAttempted').value.trim();
+
+            if (!subjectName || !subjectCode || !semSec || !branchName || !numOfStudents || !maxMarks || !classStrength || !studentsAttempted) {
+                alert('Please fill in all the fields.');
+                return;
+            }
+
+            const mappingTable = document.querySelector('#mappingTableContainer table');
+            if (!mappingTable) {
+                alert('Please create a mapping table first.');
+                return;
+            }
+
+            const rows = mappingTable.rows;
+            const mapping = {
+                subjectName,
+                subjectCode,
+                semSec,
+                branchName,
+                numOfStudents,
+                maxMarks,
+                classStrength,
+                studentsAttempted,
+                mappings: {}
+            };
+
+            for (let i = 1; i < rows.length - 1; i++) { // Start from 1 to skip header row and stop before avg row
+                const co = rows[i].cells[0].textContent.trim();
+                const psos = [];
+
+                for (let j = 1; j < rows[i].cells.length; j++) {
+                    const pso = rows[i].cells[j].querySelector('input').value.trim();
+                    psos.push(pso);
+                }
+
+                mapping.mappings[`CO${i}`] = { CO: co, PSOs: psos };
+            }
+
+            localStorage.setItem('coPsoMapping', JSON.stringify(mapping));
+            alert('Mapping saved successfully!');
+            document.getElementById('mappingButton').style.display = 'inline-block'; // Show mapping button
+        }
+
+        function loadMapping() {
+            const savedMapping = localStorage.getItem('coPsoMapping');
+            if (savedMapping) {
+                const mapping = JSON.parse(savedMapping);
+
+                document.getElementById('subjectName').value = mapping.subjectName;
+                document.getElementById('subjectCode').value = mapping.subjectCode;
+                document.getElementById('semSec').value = mapping.semSec;
+                document.getElementById('branchName').value = mapping.branchName;
+                document.getElementById('numOfStudents').value = mapping.numOfStudents;
+                document.getElementById('maxMarks').value = mapping.maxMarks;
+                document.getElementById('classStrength').value = mapping.classStrength;
+                document.getElementById('studentsAttempted').value = mapping.studentsAttempted;
+
+                // Create the table
+                document.getElementById('numOfCOs').value = Object.keys(mapping.mappings).length;
+                document.getElementById('numOfPSOs').value = mapping.mappings['CO1'].PSOs.length;
+                createMappingTable();
+
+                // Fill the table with saved data
+                const rows = document.querySelector('#mappingTableContainer table').rows;
+                for (let i = 1; i < rows.length - 1; i++) { // Start from 1 to skip header row and stop before avg row
+                    const co = mapping.mappings[`CO${i}`];
+                    for (let j = 1; j < rows[i].cells.length; j++) {
+                        rows[i].cells[j].querySelector('input').value = co.PSOs[j - 1];
+                    }
+                }
+                calculateAvgs(); // Calculate averages after loading data
+            }
+        }
+
+        function clearMapping() {
+            document.getElementById('mappingTableContainer').innerHTML = '';
+            localStorage.removeItem('coPsoMapping');
+        }
+
+        function redirectToMapping() {
+            window.location.href = 'view2.html'; // Change this to your desired URL
+        }
+
+        function validateFileUpload() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+            const errorDiv = document.getElementById('fileSizeError');
+
+            if (file && file.size > 1048576) { // 1MB
+                errorDiv.textContent = 'File size exceeds 1MB. Please upload a smaller file.';
+                fileInput.value = ''; // Clear the file input
+            } else {
+                errorDiv.textContent = '';
+            }
+        }
+    </script>
+</body>
+</html>

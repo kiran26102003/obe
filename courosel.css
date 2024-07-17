@@ -1,0 +1,188 @@
+/* Reset and normalize */
+body, div, p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+/* Global styles */
+body {
+  font-family: "Noto Sans Kannada", sans-serif;
+  font-size: 19px;
+  line-height: 1.11;
+  background-color: #ffffff;
+  color: #192A56;
+}
+
+img{
+    margin: auto;
+    height: 120px;
+    margin-left: 45px
+}
+
+/* Container styles */
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+      width: 750px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+      width: 970px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+      width: 1170px;
+  }
+}
+
+/* Header styles */
+.header {
+  background-color: var(--main-bg-color-7); /* assuming this variable is defined elsewhere */
+  padding: 30px 0;
+}
+
+.header h1.logo {
+  margin-top: 0;
+}
+
+.header h2 {
+  font-family: 'Bree Serif', serif;
+  font-size: 31px;
+}
+
+.header .col-md-7 {
+  width: 58.33333333%; /* This is already set in Bootstrap's default grid */
+  text-align: center; /* Adjusted to center align content */
+}
+
+.header p {
+  font-family: 'Montserrat', sans-serif;
+  color: #192A56;
+  margin-bottom: 15px; /* Added spacing between paragraphs */
+}
+
+.header .location {
+  font-family: 'Oswald', sans-serif;
+  color: #192A56;
+}
+
+/* Additional typography styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 300; /* Adjusted font weight for headings */
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+p {
+  font-size: 14px;
+  letter-spacing: 0.07em;
+}
+
+
+/*for form styling*/
+.form-container {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fffffd;
+  border: transparent;
+  border-radius: 8px;
+  box-shadow: 10PX 5px 5px grey;
+}
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.form-group label {
+  flex: 1;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.form-group input,
+.form-group select {
+  flex: 2;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 10px;
+}
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: #9dd1ff;
+  outline: none; 
+}
+  #academic-year:hover{
+  border-color: #ccc;
+  box-shadow: 5px 5px 2px grey; 
+  background-color: rgb(240, 238, 229);
+  color: #6d4fb4;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+#section:hover{
+  border-color: #ccc;
+  box-shadow: 5px 5px 2px grey; 
+  background-color: rgb(240, 238, 229);
+  color: #6d4fb4;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+#semester:hover{
+  border-color: #ccc;
+  box-shadow: 5px 5px 2px grey; 
+  background-color: rgb(240, 238, 229);
+  color: #6d4fb4;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+
+/* Button styles */
+.form-group .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 10px;
+  margin-left: 500px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 20px;
+  background-color: #337ab7;
+  color: #fff;
+  transition: background-color 0.3s ease;
+  border: transparent;
+  width: 150px;
+}
+
+.form-group .btn:hover {
+  background-color: #6d4fb4;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 5px 5px 10px grey;
+  transition: background-color 0.3s ease;
+}
+.form-group input[type = "text"]:hover{
+background-color: rgb(240, 238, 229);
+color: #6d4fb4;
+font-weight: bold;
+border-color: #ccc;
+box-shadow: 5px 5px 2px grey; 
+transition: background-color 0.3s ease;
+}

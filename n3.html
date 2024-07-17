@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcomes Form</title>
+<style>
+    /* Basic styling for layout */
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        border-radius: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+    }
+    button:hover {
+        background-color: #4577a0;
+        transition: 0.3s background-color ease;
+        color: black;
+    }
+    .submit-btn {
+        background-color: #008CBA;
+        margin-left: 45%;
+    }
+    .submit-btn:hover {
+        background-color: #007B9E;
+    }
+    .mapping-btn {
+        background-color: #8A2BE2;
+        margin-left: 10px;
+        display: none; /* Initially hidden */
+    }
+    .mapping-btn:hover {
+        background-color: #6A0DAD;
+    }
+    h2 {
+        text-align: center;
+        font-weight: bold;
+        color: darkred;
+        font-size: 32px;
+    }
+    .hidden {
+        display: none;
+    }
+    footer {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #87c1ff;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
+    .footer-content {
+        margin: 0 auto;
+    }
+</style>
+</head>
+<body>
+
+<h2>Enter Outcomes</h2>
+
+<button onclick="showForm('COForm')">Course Outcomes</button>
+<button onclick="showForm('POForm')">Program Outcomes</button>
+<button onclick="showForm('PSOForm')">Program Specific Outcomes</button>
+<button onclick="showForm('PEOForm')">Program Education Objectives</button>
+
+<hr>
+
+<!-- Course Outcomes Form -->
+<div id="COForm" class="hidden">
+    <form id="coForm">
+        <label for="numCOs">Number of Course Outcomes:</label>
+        <input type="number" id="numCOs" name="numCOs" min="1" required>
+        <button type="button" onclick="generateCOInputs()">Generate CO Boxes</button>
+    </form>
+
+    <div id="coInputs"></div>
+
+    <button type="button" class="submit-btn" onclick="submitCOForm()">Submit</button>
+    <button type="button" class="mapping-btn" id="mappingButtonCO" onclick="redirectToDisplay()">View Outcomes</button>
+</div>
+
+<!-- Program Outcomes Form -->
+<div id="POForm" class="hidden">
+    <form id="POFormInner" onsubmit="return handleSubmit(event)">
+        <label for="numPOs">Number of Program Outcomes:</label>
+        <input type="number" id="numPOs" name="numPOs" min="1" required>
+        <button type="button" onclick="generatePOInputs()">Generate PO Boxes</button>
+        <div id="POInputs"></div>
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="mapping-btn" id="mappingButtonPO" onclick="redirectToDisplay()">View Outcomes</button>
+    </form>
+</div>
+
+<!-- Program Specific Outcomes Form -->
+<div id="PSOForm" class="hidden">
+    <form id="PSOFormInner" onsubmit="return handlePSOFormSubmit(event)">
+        <label for="numPSOs">Number of Program Specific Outcomes:</label>
+        <input type="number" id="numPSOs" name="numPSOs" min="1" required>
+        <button type="button" onclick="generatePSOInputs()">Generate PSO Boxes</button>
+        <div id="PSOInputs"></div>
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="mapping-btn" id="mappingButtonPSO" onclick="redirectToDisplay()">View Outcomes</button>
+    </form>
+</div>
+
+<!-- Program Education Objectives Form -->
+<div id="PEOForm" class="hidden">
+    <form id="PEOFormInner" onsubmit="return handlePEOFormSubmit(event)">
+        <label for="numPEOs">Number of Program Education Objectives:</label>
+        <input type="number" id="numPEOs" name="numPEOs" min="1" required>
+        <button type="button" onclick="generatePEOInputs()">Generate PEO Boxes</button>
+        <div id="PEOInputs"></div>
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="mapping-btn" id="mappingButtonPEO" onclick="redirectToDisplay()">View Outcomes</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    loadData();
+    preloadPSOInputs();
+    preloadPEOInputs();
+});
+
+function showForm(formId) {
+    document.getElementById('COForm').classList.add('hidden');
+    document.getElementById('POForm').classList.add('hidden');
+    document.getElementById('PSOForm').classList.add('hidden');
+    document.getElementById('PEOForm').classList.add('hidden');
+    document.getElementById(formId).classList.remove('hidden');
+}
+
+// CO Form Functions
+function generateCOInputs() {
+    var numCOs = document.getElementById('numCOs').value;
+    var coInputsDiv = document.getElementById('coInputs');
+    coInputsDiv.innerHTML = ''; // Clear previous inputs
+    
+    for (var i = 1; i <= numCOs; i++) {
+        var label = document.createElement('label');
+        label.textContent = 'CO ' + i + ':';
+        
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'co' + i;
+        input.placeholder = 'Enter Course Outcome ' + i;
+        
+        coInputsDiv.appendChild(label);
+        coInputsDiv.appendChild(input);
+    }
+}
+
+function submitCOForm() {
+    var inputs = document.querySelectorAll('#coInputs input[type="text"]');
+    for (var input of inputs) {
+        if (input.value.trim() === '') {
+            alert('Please enter all Course Outcomes.');
+            return;
+        }
+    }
+    // Save data to localStorage
+    var coData = [];
+    inputs.forEach(function(input) {
+        coData.push(input.value.trim());
+    });
+    localStorage.setItem('courseOutcomes', JSON.stringify(coData));
+
+    alert('Form submitted successfully!');
+    
+    // Show the mapping button after successful submission
+    document.getElementById('mappingButtonCO').style.display = 'inline-block';
+}
+
+// PO Form Functions
+function generatePOInputs() {
+    var numPOs = document.getElementById('numPOs').value;
+    var POInputsDiv = document.getElementById('POInputs');
+    POInputsDiv.innerHTML = ''; // Clear previous inputs
+    
+    for (var i = 1; i <= numPOs; i++) {
+        var label = document.createElement('label');
+        label.textContent = 'PO ' + i + ':';
+        
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'po' + i;
+        input.placeholder = 'Enter Program Outcome ' + i;
+        
+        POInputsDiv.appendChild(label);
+        POInputsDiv.appendChild(input);
+    }
+
+    // Store number of POs in local storage
+    localStorage.setItem('numPOs', numPOs);
+    
+    // Populate the inputs with saved data
+    populatePOInputs();
+}
+
+function saveData() {
+    var numPOs = document.getElementById('numPOs').value;
+    var POs = {};
+
+    for (var i = 1; i <= numPOs; i++) {
+        var poValue = document.querySelector('input[name="po' + i + '"]').value;
+        POs['po' + i] = poValue;
+    }
+
+    localStorage.setItem('programOutcomes', JSON.stringify(POs));
+    alert('Data saved successfully!');
+}
+
+function loadData() {
+    var numPOs = localStorage.getItem('numPOs');
+    if (numPOs) {
+        document.getElementById('numPOs').value = numPOs;
+        generatePOInputs();
+    }
+}
+
+function populatePOInputs() {
+    var POs = JSON.parse(localStorage.getItem('programOutcomes'));
+    if (POs) {
+        var numPOs = document.getElementById('numPOs').value;
+        for (var i = 1; i <= numPOs; i++) {
+            if (POs['po' + i]) {
+                document.querySelector('input[name="po' + i + '"]').value = POs['po' + i];
+            }
+        }
+    }
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    saveData();
+    document.getElementById('mappingButtonPO').style.display = 'inline-block';
+}
+
+// PSO Form Functions
+function generatePSOInputs() {
+    var numPSOs = document.getElementById('numPSOs').value;
+    var PSOInputsDiv = document.getElementById('PSOInputs');
+    PSOInputsDiv.innerHTML = ''; // Clear previous inputs
+
+    var predefinedPSOs = [
+        "Engineering Knowledge: Apply the knowledge of mathematics, science, engineering fundamentals, and an engineering specialization to the solution of complex engineering problems.",
+        "Problem Analysis: Identify, formulate, review research literature, and analyse complex engineering problems reaching substantiated conclusions using first principles of mathematics, natural sciences and engineering sciences.",
+        "Design/Development of Solutions: Design solutions for complex engineering problems and design system components or processes that meet the specified needs with appropriate consideration for the public health and safety, and the cultural, societal, and environmental considerations.",
+        "Conduct Investigations of Complex Problems: Use research-based knowledge and research methods including design of experiments, analysis and interpretation of data, and synthesis of the information to provide valid conclusions for complex problems.",
+        "Modern Tool Usage: Create, select, and apply appropriate techniques, resources, and modern engineering and IT tools including prediction and modelling to complex engineering activities with an understanding of the limitations.",
+        "The Engineer and Society: Apply reasoning informed by the contextual knowledge to assess societal, health, safety, legal and cultural issues and the consequent responsibilities relevant to the professional engineering practice.",
+        "Environment and Sustainability: Understand the impact of the professional engineering solutions in societal and environmental contexts, and demonstrate the knowledge of, and need for sustainable development.",
+        "Ethics: Apply ethical principles and commit to professional ethics and responsibilities and norms of the engineering practice.",
+        "Individual and Team Work: Function effectively as an individual, and as a member or leader in diverse teams, and in multidisciplinary settings.",
+        "Communication: Communicate effectively on complex engineering activities with the engineering community and with society at large, such as, being able to comprehend and write effective reports and design documentation, make effective presentations, and give and receive clear instructions.",
+        "Project Management and Finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to one’s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.",
+        "Life-long Learning: Recognize the need for, and have the preparation and ability to engage in independent and lifelong learning in the broadest context of technological change."
+    ];
+
+    for (var i = 1; i <= numPSOs; i++) {
+        var label = document.createElement('label');
+        label.textContent = 'PSO ' + i + ':';
+        
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'pso' + i;
+        input.placeholder = 'Enter Program Specific Outcome ' + i;
+        if (i <= predefinedPSOs.length) {
+            input.value = predefinedPSOs[i - 1];
+        }
+
+        PSOInputsDiv.appendChild(label);
+        PSOInputsDiv.appendChild(input);
+    }
+
+    // Store number of PSOs in local storage
+    localStorage.setItem('numPSOs', numPSOs);
+    
+    // Populate the inputs with saved data
+    populatePSOInputs();
+}
+
+function handlePSOFormSubmit(event) {
+    event.preventDefault();
+    var numPSOs = document.getElementById('numPSOs').value;
+    var allFilled = true;
+
+    for (var i = 1; i <= numPSOs; i++) {
+        var psoInput = document.querySelector('input[name="pso' + i + '"]');
+        if (!psoInput.value) {
+            allFilled = false;
+            break;
+        }
+    }
+
+    if (!allFilled) {
+        alert('Please enter all Program Specific Outcomes.');
+    } else {
+        savePSOData();
+        document.getElementById('mappingButtonPSO').style.display = 'inline-block';
+    }
+}
+
+function savePSOData() {
+    var numPSOs = document.getElementById('numPSOs').value;
+    var PSOs = {};
+
+    for (var i = 1; i <= numPSOs; i++) {
+        var psoValue = document.querySelector('input[name="pso' + i + '"]').value;
+        PSOs['pso' + i] = psoValue;
+    }
+
+    localStorage.setItem('programSpecificOutcomes', JSON.stringify(PSOs));
+    alert('Data saved successfully!');
+}
+
+function preloadPSOInputs() {
+    var numPSOs = localStorage.getItem('numPSOs');
+    if (numPSOs) {
+        document.getElementById('numPSOs').value = numPSOs;
+        generatePSOInputs();
+    }
+}
+
+function populatePSOInputs() {
+    var PSOs = JSON.parse(localStorage.getItem('programSpecificOutcomes'));
+    if (PSOs) {
+        var numPSOs = document.getElementById('numPSOs').value;
+        for (var i = 1; i <= numPSOs; i++) {
+            if (PSOs['pso' + i]) {
+                document.querySelector('input[name="pso' + i + '"]').value = PSOs['pso' + i];
+            }
+        }
+    }
+}
+
+// PEO Form Functions
+function generatePEOInputs() {
+    var numPEOs = document.getElementById('numPEOs').value;
+    var PEOInputsDiv = document.getElementById('PEOInputs');
+    PEOInputsDiv.innerHTML = ''; // Clear previous inputs
+
+    for (var i = 1; i <= numPEOs; i++) {
+        var label = document.createElement('label');
+        label.textContent = 'PEO ' + i + ':';
+        
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'peo' + i;
+        input.placeholder = 'Enter Program Education Objective ' + i;
+
+        PEOInputsDiv.appendChild(label);
+        PEOInputsDiv.appendChild(input);
+    }
+
+    // Store number of PEOs in local storage
+    localStorage.setItem('numPEOs', numPEOs);
+    
+    // Populate the inputs with saved data
+    populatePEOInputs();
+}
+
+function handlePEOFormSubmit(event) {
+    event.preventDefault();
+    var numPEOs = document.getElementById('numPEOs').value;
+    var allFilled = true;
+
+    for (var i = 1; i <= numPEOs; i++) {
+        var peoInput = document.querySelector('input[name="peo' + i + '"]');
+        if (!peoInput.value) {
+            allFilled = false;
+            break;
+        }
+    }
+
+    if (!allFilled) {
+        alert('Please enter all Program Education Objectives.');
+    } else {
+        savePEOData();
+        document.getElementById('mappingButtonPEO').style.display = 'inline-block';
+    }
+}
+
+function savePEOData() {
+    var numPEOs = document.getElementById('numPEOs').value;
+    var PEOs = {};
+
+    for (var i = 1; i <= numPEOs; i++) {
+        var peoValue = document.querySelector('input[name="peo' + i + '"]').value;
+        PEOs['peo' + i] = peoValue;
+    }
+
+    localStorage.setItem('programEducationObjectives', JSON.stringify(PEOs));
+    alert('Data saved successfully!');
+}
+
+function preloadPEOInputs() {
+    var numPEOs = localStorage.getItem('numPEOs');
+    if (numPEOs) {
+        document.getElementById('numPEOs').value = numPEOs;
+        generatePEOInputs();
+    }
+}
+
+function populatePEOInputs() {
+    var PEOs = JSON.parse(localStorage.getItem('programEducationObjectives'));
+    if (PEOs) {
+        var numPEOs = document.getElementById('numPEOs').value;
+        for (var i = 1; i <= numPEOs; i++) {
+            if (PEOs['peo' + i]) {
+                document.querySelector('input[name="peo' + i + '"]').value = PEOs['peo' + i];
+            }
+        }
+    }
+}
+
+function redirectToDisplay() {
+    window.location.href = 'D.html'; // Change this to your desired URL
+}
+</script>
+
+<footer>
+    <div class="footer-content">
+        &copy; 2024 BAPUJI INSTITUTE OF ENGINEERING AND TECHNOLOGY
+    </div>
+</footer>
+</body>
+</html>

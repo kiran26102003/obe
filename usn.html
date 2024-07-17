@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="text"], input[type="number"] {
+            width: 80%;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .home-button {
+            margin-left: 10px;
+            text-decoration: none;
+            padding: 8px 16px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2>MARKS ENTRY</h2>
+
+<label for="numStudents">Enter Number of Students:</label>
+<input type="number" id="numStudents" min="1" placeholder="Number of Students">
+<button onclick="generateRows()">Submit</button>
+
+<table id="studentTable">
+    <thead>
+        <tr>
+            <th>USN</th>
+            <th colspan="3">Question 1</th>
+            <th colspan="3">Question 2</th>
+            <th colspan="3">Question 3</th>
+            <th colspan="3">Question 4</th>
+            <th colspan="3">Question 5</th>
+            <th colspan="3">Question 6</th>
+            <th colspan="3">Question 7</th>
+            <th colspan="3">Question 8</th>
+            <th colspan="3">Question 9</th>
+            <th colspan="3">Question 10</th>
+            <th>Target Marks</th>
+            <th>Attained Marks</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="studentRows">
+        <!-- Student rows will be generated here -->
+    </tbody>
+</table>
+
+<div class="button-container">
+    <button onclick="saveData()">Save Data</button>
+    <button onclick="printData()">Print Data</button>
+    <button onclick="clearForm()">Clear Form</button>
+    <button onclick="calculateLevelOfAttainment()">Calculate Level of Attainment</button>
+    <a href="OBE.html" class="home-button">Back to Home</a>
+    <a href="copomap.html" class="home-button">Back</a>
+</div>
+
+<div id="levelOfAttainment" style="margin-top: 20px; font-size: 1.2em;"></div>
+
+<script>
+    function generateRows() {
+        const numStudents = document.getElementById('numStudents').value;
+        const tbody = document.getElementById('studentRows');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        for (let i = 0; i < numStudents; i++) {
+            const row = `<tr>
+                <td><input type="text" placeholder="Enter USN"></td>
+                <td><input type="number" placeholder="Answer 1a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 1b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 1c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 2a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 2b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 2c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 3a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 3b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 3c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 4a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 4b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 4c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 5a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 5b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 5c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 6a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 6b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 6c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 7a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 7b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 7c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 8a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 8b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 8c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 9a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 9b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 9c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 10a" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 10b" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Answer 10c" oninput="calculateAttainedMarks(this)"></td>
+                <td><input type="number" placeholder="Target Marks"></td>
+                <td><input type="number" placeholder="Attained Marks" readonly></td>
+            </tr>`;
+            tbody.innerHTML += row; // Add new row
+        }
+    }
+
+    function calculateAttainedMarks(input) {
+        const row = input.closest('tr');
+        const inputs = row.querySelectorAll('input[type="number"]');
+        const targetMarksInput = inputs[inputs.length - 2]; // Target Marks
+        const attainedMarksInput = inputs[inputs.length-1]; // Attained Marks
+
+        let totalScore = 0;
+
+        inputs.forEach((input, index) => {
+            if (index > 0 && index < inputs.length - 2) { // Exclude USN, Target and Attained Marks
+                totalScore += parseFloat(input.value) || 0;
+            }
+        });
+
+        attainedMarksInput.value = totalScore.toFixed(2); // Set attained marks
+    }
+
+    function calculateLevelOfAttainment() {
+        const rows = document.querySelectorAll('#studentRows tr');
+        let totalAttainedMarks = 0;
+        let totalMarks = 0;
+
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input[type="number"]');
+            let attainedMarks = parseFloat(inputs[inputs.length - 1].value) || 0;
+            let targetMarks = parseFloat(inputs[inputs.length - 2].value) || 0;
+
+            totalAttainedMarks += attainedMarks;
+            totalMarks += targetMarks;
+        });
+
+        const levelOfAttainment = (totalAttainedMarks / totalMarks) * 100 || 0;
+        document.getElementById('levelOfAttainment').innerText = `Level of Attainment: ${levelOfAttainment.toFixed(2)}%`;
+    }
+
+    function saveData() {
+        const rows = document.querySelectorAll('#studentRows tr');
+        const studentData = [];
+
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            const data = {
+                usn: inputs[0].value,
+                answers: [],
+                targetMarks: parseFloat(inputs[inputs.length - 2].value) || 0,
+                attainedMarks: parseFloat(inputs[inputs.length - 1].value) || 0
+            };
+
+            for (let i = 1; i < inputs.length - 2; i++) {
+                data.answers.push(parseFloat(inputs[i].value) || 0); // Store as numbers
+            }
+
+            studentData.push(data);
+        });
+
+        localStorage.setItem('studentData', JSON.stringify(studentData));
+        alert('Data saved successfully!');
+    }
+
+    function printData() {
+        const studentData = JSON.parse(localStorage.getItem('studentData'));
+        if (!studentData) {
+            alert('No data found to print.');
+            return;
+        }
+
+        let totalAttainedMarks = 0;
+        let totalMarks = 0;
+
+        studentData.forEach(data => {
+            totalAttainedMarks += data.attainedMarks;
+            totalMarks += data.targetMarks;
+        });
+
+        const levelOfAttainment = (totalAttainedMarks / totalMarks) * 100 || 0;
+
+        let printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Print Data</title></head><body>');
+        printWindow.document.write('<h2>Student Marks Data</h2>');
+        printWindow.document.write(`<p>Level of Attainment: ${levelOfAttainment.toFixed(2)}%</p>`);
+        
+        printWindow.document.write('<table border="1"><tr><th>USN</th><th colspan="3">Question 1</th><th colspan="3">Question 2</th><th colspan="3">Question 3</th><th colspan="3">Question 4</th><th colspan="3">Question 5</th><th colspan="3">Question 6</th><th colspan="3">Question 7</th><th colspan="3">Question 8</th><th colspan="3">Question 9</th><th colspan="3">Question 10</th><th>Target Marks</th><th>Attained Marks</th></tr>');
+
+        studentData.forEach(data => {
+            printWindow.document.write(`<tr>
+                <td>${data.usn}</td>
+                ${data.answers.map(answer => `<td>${answer}</td>`).join('')}
+                <td>${data.targetMarks}</td>
+                <td>${data.attainedMarks}</td>
+            </tr>`);
+        });
+
+        printWindow.document.write('</table>');
+
+        // Signature section below the table, right-aligned
+        printWindow.document.write('<div style="text-align: right; margin-top: 20px;">');
+        printWindow.document.write('<p>Signature of Faculty:</p>');
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function clearForm() {
+        localStorage.removeItem('studentData'); // Clear local storage
+        document.getElementById('studentRows').innerHTML = ''; // Clear table rows
+        document.getElementById('numStudents').value = ''; // Clear number of students input
+        document.getElementById('levelOfAttainment').innerText = ''; // Clear level of attainment
+        alert('Form cleared successfully!');
+    }
+</script>
+
+</body>
+</html>

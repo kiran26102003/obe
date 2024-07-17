@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Outcomes</title>
+<style>
+    /* Basic styling for layout */
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+    }
+    h2 {
+        text-align: center;
+        font-weight: bold;
+        color: rgb(2, 17, 102);
+        font-size: 32px;
+    }
+    .outcomes-section {
+        margin-bottom: 30px;
+    }
+    .outcomes-section h3 {
+        font-size: 24px;
+        color: #d71a1a;
+    }
+    .outcomes-section ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .outcomes-section li {
+        background-color: #f4f4f4;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    footer {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #87c1ff;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
+    .footer-content {
+        margin: 0 auto;
+    }
+    #MAP_BUTTON{
+            padding: 10px;
+            background-color: #007bff;
+
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px;
+            margin-left: 45%;
+            
+    }
+    #MAP_BUTTON:hover{
+            font-weight: bold;
+            background-color: rgb(174, 219, 255);
+            color: rgb(255, 255, 255);
+            transition: 0.3s background-color ease;
+            border-radius: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h2>View Outcomes</h2>
+<hr>
+<div class="outcomes-section" id="coSection">
+    <h3>Course Outcomes (COs)</h3>
+    <ul id="coList"></ul>
+</div>
+
+<div class="outcomes-section" id="poSection">
+    <h3>Program Outcomes (POs)</h3>
+    <ul id="poList"></ul>
+</div>
+
+<div class="outcomes-section" id="psoSection">
+    <h3>Program Specific Outcomes (PSOs)</h3>
+    <ul id="psoList"></ul>
+</div>
+
+<div class="outcomes-section" id="peoSection">
+    <h3>Program Education Objectives (PEOs)</h3>
+    <ul id="peoList"></ul>
+</div>
+
+<div>
+    <button onclick="displayMap()" id="MAP_BUTTON">
+    <a href="copomap.html">Open Mapping Tool</a>
+</button> <!-- Replace with your actual link -->
+</div>
+
+<footer>
+    <div class="footer-content">
+        &copy; 2024 BAPUJI INSTITUTE OF ENGINEERING AND TECHNOLOGY
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    displayOutcomes();
+});
+
+function displayOutcomes() {
+    // Display COs
+    var coList = document.getElementById('coList');
+    var courseOutcomes = JSON.parse(localStorage.getItem('courseOutcomes'));
+    if (courseOutcomes) {
+        courseOutcomes.forEach(function(co, index) {
+            var listItem = document.createElement('li');
+            listItem.textContent = 'CO ' + (index + 1) + ': ' + co;
+            coList.appendChild(listItem);
+        });
+    }
+
+    // Display POs
+    var poList = document.getElementById('poList');
+    var programOutcomes = JSON.parse(localStorage.getItem('programOutcomes'));
+    if (programOutcomes) {
+        Object.keys(programOutcomes).forEach(function(key) {
+            var listItem = document.createElement('li');
+            listItem.textContent = key.toUpperCase() + ': ' + programOutcomes[key];
+            poList.appendChild(listItem);
+        });
+    }
+
+    // Display PSOs
+    var psoList = document.getElementById('psoList');
+    var programSpecificOutcomes = JSON.parse(localStorage.getItem('programSpecificOutcomes'));
+    if (programSpecificOutcomes) {
+        Object.keys(programSpecificOutcomes).forEach(function(key) {
+            var listItem = document.createElement('li');
+            listItem.textContent = key.toUpperCase() + ': ' + programSpecificOutcomes[key];
+            psoList.appendChild(listItem);
+        });
+    }
+
+    // Display PEOs
+    var peoList = document.getElementById('peoList');
+    var programEducationObjectives = JSON.parse(localStorage.getItem('programEducationObjectives'));
+    if (programEducationObjectives) {
+        Object.keys(programEducationObjectives).forEach(function(key) {
+            var listItem = document.createElement('li');
+            listItem.textContent = key.toUpperCase() + ': ' + programEducationObjectives[key];
+            peoList.appendChild(listItem);
+        });
+    }
+
+}
+
+function displayMap() {
+    alert("Map functionality to be implemented here.");
+}
+</script>
+
+</body>
+</html>

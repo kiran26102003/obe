@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View CO-PO Mapping</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button-container {
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>CO-PO Mapping Details</h2>
+    <div id="detailsContainer">
+        <!-- Details will be dynamically added here -->
+    </div>
+    
+    <div class="button-container">
+        <button onclick="printPage()">Print</button>
+        <button onclick="saveAsPDF()">Save as PDF</button>
+        <button onclick="redirectToHome()">Go Back</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMapping();
+        });
+
+        function loadMapping() {
+            const savedMapping = localStorage.getItem('coPsoMapping');
+            if (savedMapping) {
+                const mapping = JSON.parse(savedMapping);
+                const detailsContainer = document.getElementById('detailsContainer');
+
+                // Displaying subject details
+                detailsContainer.innerHTML += `<p><strong>Subject Name:</strong> ${mapping.subjectName}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Subject Code:</strong> ${mapping.subjectCode}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Semester & Section:</strong> ${mapping.semSec}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Branch Name:</strong> ${mapping.branchName}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Number of Students:</strong> ${mapping.numOfStudents}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Maximum Marks Allotted:</strong> ${mapping.maxMarks}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Total Class Strength:</strong> ${mapping.classStrength}</p>`;
+                detailsContainer.innerHTML += `<p><strong>Number of Students Attempted:</strong> ${mapping.studentsAttempted}</p>`;
+
+                // Creating the mapping table
+                const mappingTable = document.createElement('table');
+                const headerRow = document.createElement('tr');
+                const coHeaderCell = document.createElement('th');
+                coHeaderCell.textContent = 'Course Outcomes (CO)';
+                headerRow.appendChild(coHeaderCell);
+
+                // Create headers for PSOs
+                const numOfPSOs = mapping.mappings[`CO1`].PSOs.length;
+                for (let j = 1; j <= numOfPSOs; j++) {
+                    const psoHeaderCell = document.createElement('th');
+                    psoHeaderCell.textContent = `PSO ${j}`;
+                    headerRow.appendChild(psoHeaderCell);
+                }
+                headerRow.appendChild(document.createElement('th')).textContent = 'Avg'; // Add Avg header
+                mappingTable.appendChild(headerRow);
+
+                // Creating rows for COs
+                const averages = Array(numOfPSOs).fill(0); // Initialize averages array
+                for (let i = 1; i <= Object.keys(mapping.mappings).length; i++) {
+                    const row = document.createElement('tr');
+                    const coCell = document.createElement('td');
+                    coCell.textContent = `CO ${i}`;
+                    row.appendChild(coCell);
+
+                    const psos = mapping.mappings[`CO${i}`].PSOs;
+                    psos.forEach(pso => {
+                        const cell = document.createElement('td');
+                        cell.textContent = pso;
+                        row.appendChild(cell);
+                    });
+
+                    mappingTable.appendChild(row);
+                }
+
+                // Calculate averages and add avg row
+                const avgRow = document.createElement('tr');
+                const avgHeader = document.createElement('th');
+                avgHeader.textContent = 'Avg';
+                avgRow.appendChild(avgHeader);
+
+                for (let j = 0; j < numOfPSOs; j++) {
+                    let sum = 0;
+                    for (let i = 1; i <= Object.keys(mapping.mappings).length; i++) {
+                        sum += parseFloat(mapping.mappings[`CO${i}`].PSOs[j]) || 0; // Sum values
+                    }
+                    const avg = sum / Object.keys(mapping.mappings).length; // Calculate average
+                    averages[j] = avg;
+                    const avgCell = document.createElement('td');
+                    avgCell.textContent = avg.toFixed(2);
+                    avgRow.appendChild(avgCell);
+                }
+                mappingTable.appendChild(avgRow);
+                detailsContainer.appendChild(mappingTable);
+            } else {
+                detailsContainer.innerHTML = '<p>No data found.</p>';
+            }
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        async function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text('CO-PO Mapping Details', 10, 10);
+
+            const savedMapping = localStorage.getItem('coPsoMapping');
+            if (savedMapping) {
+                const mapping = JSON.parse(savedMapping);
+                doc.text(`Subject Name: ${mapping.subjectName}`, 10, 20);
+                doc.text(`Subject Code: ${mapping.subjectCode}`, 10, 30);
+                doc.text(`Semester & Section: ${mapping.semSec}`, 10, 40);
+                doc.text(`Branch Name: ${mapping.branchName}`, 10, 50);
+                doc.text(`Number of Students: ${mapping.numOfStudents}`, 10, 60);
+                doc.text(`Maximum Marks Allotted: ${mapping.maxMarks}`, 10, 70);
+                doc.text(`Total Class Strength: ${mapping.classStrength}`, 10, 80);
+                doc.text(`Number of Students Attempted: ${mapping.studentsAttempted}`, 10, 90);
+                
+                // Adding mapping details to PDF
+                const tableData = [];
+                const header = ['Course Outcomes (CO)', ...Array.from({ length: mapping.mappings[`CO1`].PSOs.length }, (_, i) => `PSO ${i + 1}`), 'Avg'];
+                tableData.push(header);
+
+                const averages = Array(mapping.mappings[`CO1`].PSOs.length).fill(0);
+                for (let i = 1; i <= Object.keys(mapping.mappings).length; i++) {
+                    const row = [ `CO ${i}`, ...mapping.mappings[`CO${i}`].PSOs ];
+                    tableData.push(row);
+                }
+
+                // Calculate averages
+                for (let j = 0; j < mapping.mappings[`CO1`].PSOs.length; j++) {
+                    let sum = 0;
+                    for (let i = 1; i <= Object.keys(mapping.mappings).length; i++) {
+                        sum += parseFloat(mapping.mappings[`CO${i}`].PSOs[j]) || 0;
+                    }
+                    averages[j] = (sum / Object.keys(mapping.mappings).length).toFixed(2);
+                }
+                tableData.push(['Avg', ...averages]);
+
+                doc.autoTable({
+                    head: [header],
+                    body: tableData.slice(1), // Exclude header row from body
+                    startY: 100,
+                });
+
+                doc.save('CO-PO_Mapping.pdf');
+            } else {
+                alert('No data found to save.');
+            }
+        }
+
+        function redirectToHome() {
+            window.location.href = 'copomap.html'; // Change to your main page URL
+        }
+    </script>
+</body>
+</html>
